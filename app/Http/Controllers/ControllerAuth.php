@@ -69,6 +69,20 @@ class ControllerAuth extends Controller
         ],200);
     }
 
+    static public function checkAuth(){
+
+        //$userData = Auth::user();
+        //$id = Auth::id();
+        $isAuth = Auth::check();
+        return response([
+            'status' => true,
+            //'message' => 'User Login profile',
+            //'data' => $userData,
+            //'id' => $id,
+            'isAuth' => $isAuth
+        ],200);
+    }
+
     public function userprofile(){
         $userData = Auth::user();
         $id = Auth::id();
