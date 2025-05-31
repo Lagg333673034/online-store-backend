@@ -1,0 +1,66 @@
+pm.sendRequest({
+    url: "http://127.0.0.1:8000/sanctum/csrf-cookie",
+    method: "GET"
+}, function (err, res, { cookies }) {
+    if (!err) {
+        const xsrfToken = cookies.has('XSRF-TOKEN') ? cookies.get('XSRF-TOKEN') : null;
+        if (xsrfToken) {
+            // Add X-XSRF-TOKEN to the header of the subsequent request
+            console.log('xsrfToken', xsrfToken);
+            pm.request.headers.add({ key: 'X-XSRF-TOKEN', value: xsrfToken });
+        } else {
+            console.error('XSRF-TOKEN not found in cookies');
+        }
+    } else {
+        console.error('Error fetching CSRF token:', err);
+    }
+});
+
+=====================================================================
+1) PHP
+2) composer
+3) далее установать composer "laravel/installer, 
+для этого выполнить команду: 
+global require laravel/installer
+
+//создаём проект
+laravel new example-app
+
+//меняем подключениек базе данных в .env файле:
+DB_CONNECTION=mysql
+DB_HOST=MySQL-8.4
+DB_PORT=3306
+DB_DATABASE=db_laravel_shop
+DB_USERNAME=root
+DB_PASSWORD=
+
+
+//настраиваем роутинг через файл api.php --- ОБЯЗАТЕЛЬНО
+php artisan install:api
+
+
+//базовая миграция для создания обязательных таблиц
+php artisan migrate
+
+
+//далее запускаем сервер командой (адрес http://127.0.0.1:8000/):
+php artisan serve
+
+
+//далее делаем модель для таблицы (или вручную)
+php artisan make:model Name
+
+//далее делаем контроллер для таблицы (или вручную)
+php artisan make:controller Name
+
+//тут corse настраиваем
+php artisan config:publish cors
+
+//для ссылки на файл
+php artisan storage:link
+
+//изменить свойство "upload_max_filesize" в php.ini 
+//а то там ограничение по загрузке файлов до 1МБ
+=====================================================================
+
+
